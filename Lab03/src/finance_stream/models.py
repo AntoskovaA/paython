@@ -1,6 +1,5 @@
 from typing import NamedTuple
 
-
 class TransactionRecord(NamedTuple):
     """Незмінна модель операції для передачі через потоковий конвеєр."""
     date: str
@@ -8,7 +7,6 @@ class TransactionRecord(NamedTuple):
     amount: float
     op_type: str  # "income" або "expense"
     description: str
-
 
 class TransactionLimitIterator:
     """Власний клас-ітератор відповідно до протоколу __iter__ та __next__."""
