@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 
 class TransactionRecord(NamedTuple):
+    """Незмінна модель операції для передачі через потоковий конвеєр."""
     date: str
     category: str
     amount: float
@@ -10,7 +11,7 @@ class TransactionRecord(NamedTuple):
 
 
 class TransactionLimitIterator:
-    """Власний клас-ітератор з протоколом __iter__ та __next__."""
+    """Власний клас-ітератор відповідно до протоколу __iter__ та __next__."""
 
     def __init__(self, transactions: list[TransactionRecord], max_count: int) -> None:
         self._data = transactions
