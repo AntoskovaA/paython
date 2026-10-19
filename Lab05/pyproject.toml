@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reliable-finance"
+version = "0.1.0"
+description = "Reliable data import, export, and error handling for financial tracker"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+reliable-finance = "reliable_finance.main:main"

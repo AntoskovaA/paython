@@ -1,0 +1,21 @@
+input:
+  path: data/transactions.csv
+
+output:
+  path: output/transactions.json
+
+processing:
+  minimum_amount: 10.0
+  skip_invalid: true
+  allowed_categories:
+    - Зарплата
+    - Фриланс
+    - Продукти
+    - Транспорт
+    - Комунальні
+    - Розваги
+    - Одяг
+
+logging:
+  level: INFO
+  path: logs/application.log
