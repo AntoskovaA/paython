@@ -1,0 +1,37 @@
+[
+{
+  "date": "2026-10-01",
+  "category": "Зарплата",
+  "amount": 32000.0,
+  "op_type": "income",
+  "description": "Основна зарплата"
+},
+{
+  "date": "2026-10-02",
+  "category": "Продукти",
+  "amount": 1450.5,
+  "op_type": "expense",
+  "description": "Супермаркет"
+},
+{
+  "date": "2026-10-04",
+  "category": "Транспорт",
+  "amount": 280.0,
+  "op_type": "expense",
+  "description": "Проїзд у транспорті"
+},
+{
+  "date": "2026-10-07",
+  "category": "Комунальні",
+  "amount": 2100.0,
+  "op_type": "expense",
+  "description": "Оплата компослуг"
+},
+{
+  "date": "2026-10-09",
+  "category": "Одяг",
+  "amount": 1900.0,
+  "op_type": "expense",
+  "description": "Купівля куртки"
+}
+]
