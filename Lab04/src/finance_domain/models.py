@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from finance_domain.value_objects import Money
@@ -79,7 +80,7 @@ class FinancialTracker:
     def __len__(self) -> int:
         return len(self._transactions)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Transaction]:
         return iter(self._transactions)
 
     def __contains__(self, transaction_id: int) -> bool:
