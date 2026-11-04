@@ -1,7 +1,7 @@
 from pathlib import Path
 import pytest
 from unittest.mock import Mock
-from reliable_finance.services import ImportStatistics, import_transactions
+from reliable_finance.services import ImportStatistics, import_transactions, filter_by_minimum_amount
 from reliable_finance.config import load_config
 from reliable_finance.exceptions import ConfigurationError
 
@@ -28,9 +28,28 @@ def test_import_transactions_with_tmp_path(tmp_path: Path):
     assert records[0].amount == 500.0
 
 
+def test_filter_minimum_amount(sample_records):
+    filtered = list(filter_by_minimum_amount(sample_records, 1000.0))
+    assert len(filtered) == 1
+    assert filtered[0].amount == 12000.0
+
+
 def test_load_config_fail_fast(monkeypatch, tmp_path: Path):
     bad_yaml = tmp_path / "bad_config.yaml"
     bad_yaml.write_text("invalid_structure: true", encoding="utf-8")
-    
     with pytest.raises(ConfigurationError):
         load_config(bad_yaml)
+
+
+def test_mock_return_value_and_interaction(mock_notifier):
+    # Перевірка Mock, return_value та interaction assertion
+    mock_notifier.send("test@example.com", "Hello")
+    mock_notifier.send.assert_called_once_with("test@example.com", "Hello")
+
+
+def test_mock_side_effect():
+    # Перевірка side_effect у Mock
+    mock_gateway = Mock()
+    mock_gateway.pay.side_effect = ValueError("Network error")
+    with pytest.raises(ValueError, match="Network error"):
+        mock_gateway.pay(100)

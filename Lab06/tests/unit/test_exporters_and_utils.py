@@ -26,3 +26,10 @@ def test_logged_operation_context():
     with logged_operation("Тестова операція"):
         x = 1 + 1
     assert x == 2
+
+
+def test_atomic_export_failure(tmp_path: Path):
+    out = tmp_path / "out.json"
+    # Передаємо неітерабельний об'єкт замість ітерабельного списку, що викличе TypeError -> DataExportError
+    with pytest.raises(DataExportError):
+        atomic_export_json("12345", out)  # type: ignore

@@ -25,7 +25,7 @@ def atomic_export_json(records: Iterable[TransactionRecord], path: Path) -> int:
 
         # Атомарне заміщення цільового файлу
         temp_path.replace(path)
-    except (OSError, TypeError) as error:
+    except (OSError, TypeError, AttributeError) as error:
         temp_path.unlink(missing_ok=True)
         raise DataExportError(f"Збій експорту у файл {path}: операцію скасовано") from error
 
