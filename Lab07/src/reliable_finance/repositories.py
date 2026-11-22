@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import func, select
+from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
 
 from reliable_finance.db_models import Category, FinancialOperation
@@ -132,10 +132,10 @@ class FinancialOperationRepository:
         """Повертає список кортежів (рік-місяць 'YYYY-MM', сума доходів, сума витрат)."""
         month_expr = func.substr(FinancialOperation.date, 1, 7)
         income_sum = func.sum(
-            func.case((FinancialOperation.op_type == "income", FinancialOperation.amount), else_=0.0)
+            case((FinancialOperation.op_type == "income", FinancialOperation.amount), else_=0.0)
         )
         expense_sum = func.sum(
-            func.case((FinancialOperation.op_type == "expense", FinancialOperation.amount), else_=0.0)
+            case((FinancialOperation.op_type == "expense", FinancialOperation.amount), else_=0.0)
         )
         statement = (
             select(month_expr, income_sum, expense_sum)

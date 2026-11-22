@@ -1,42 +1,28 @@
 from pathlib import Path
 import pytest
-from unittest.mock import Mock
-from reliable_finance.models import ProcessingConfig, LoggingConfig, AppConfig, TransactionRecord
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+from collections.abc import Generator
+
+from reliable_finance.db_models import Base
 
 
 @pytest.fixture
-def sample_config(tmp_path: Path) -> AppConfig:
-    """Фікстура №1: тестова конфігурація."""
-    input_file = tmp_path / "test_input.csv"
-    input_file.write_text("date,category,amount,type,description\n2026-10-01,Зарплата,15000.0,income,Тест", encoding="utf-8")
-    
-    output_file = tmp_path / "output.json"
-    log_file = tmp_path / "app.log"
-
-    return AppConfig(
-        input_path=input_file,
-        output_path=output_file,
-        processing=ProcessingConfig(
-            minimum_amount=100.0,
-            skip_invalid=True,
-            allowed_categories=("Зарплата", "Продукти", "Транспорт"),
-        ),
-        logging=LoggingConfig(level="INFO", path=log_file),
-    )
+def db_session() -> Generator[Session, None, None]:
+    """Окрема тестова база SQLite у пам'яті для інтеграційних тестів persistence layer."""
+    engine = create_engine("sqlite:///:memory:", echo=False)
+    Base.metadata.create_all(engine)
+    TestSession = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+    with TestSession() as session:
+        yield session
+    Base.metadata.drop_all(engine)
 
 
 @pytest.fixture
-def sample_records() -> list[TransactionRecord]:
-    """Фікстура №2: список тестових транзакцій."""
-    return [
-        TransactionRecord(date="2026-10-01", category="Зарплата", amount=12000.0, op_type="income", description="Зп"),
-        TransactionRecord(date="2026-10-02", category="Продукти", amount=400.0, op_type="expense", description="Їжа"),
-    ]
-
-
-@pytest.fixture
-def mock_notifier() -> Mock:
-    """Фікстура №3: заглушка сповіщувача з налаштованим return_value."""
-    notifier = Mock()
-    notifier.send.return_value = None
-    return notifier
+def sqlite_db_file(tmp_path: Path) -> Path:
+    """Окрема файлова тестова SQLite БД для перевірки запитів через DB-API."""
+    db_path = tmp_path / "test_finance.db"
+    engine = create_engine(f"sqlite:///{db_path}", echo=False)
+    Base.metadata.create_all(engine)
+    engine.dispose()
+    return db_path
