@@ -56,6 +56,11 @@ class FinancialOperation(Base):
         ForeignKey("categories.id"),
         nullable=False,
     )
+    
+    description: Mapped[str | None] = mapped_column(
+    String(255),
+    nullable=True,
+    )
 
     category: Mapped["Category"] = relationship(
         back_populates="operations",
